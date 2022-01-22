@@ -5,10 +5,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  subscription: Visual Studio Enterprise(17b12858-3960-4e6f-a663-a06fdae23428)
-  resourceGroup: resourcegroup-tfstate
-  storageAccount: terraformtfstateskip
-  container: tfstate
+  subscription: Visual Studio Enterprise(f12f6776-9d7e-4370-9a39-deefada50b7c)
+  resourceGroup: hr-dev-myrg
+  storageAccount: hrdevmyrgstorage
+  container: tstate
   tfstateFile: terraform.tfstate
   anyTfChanges: false
 
@@ -24,7 +24,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
     backendServiceArm: '$(subscription)'
     backendAzureRmResourceGroupName: '$(resourceGroup)'
     backendAzureRmStorageAccountName: '$(storageAccount)'
@@ -36,7 +36,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/'
     commandOptions: '-out=tfplan'
     # commandOptions: '-detailed-exitcode -out=tfplan'
     environmentServiceNameAzureRM: '$(subscription)'
@@ -44,7 +44,7 @@ steps:
 - task: PowerShell@2
   displayName: detect any terraform change
   inputs:
-    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/'
     targetType: 'inline'
     script: |
       # Write-Host "LASTEXITCODE : $LASTEXITCODE"
@@ -60,10 +60,9 @@ steps:
       {
         Write-Host "There is no change detected in Terraform tfplan file"
       }
-
 - task: TerraformTaskV1@0
   displayName: terraform apply tfplan
-  condition: eq(variables.anyTfChanges, true)
+  condition: eq(variables.anyTfChanges, true)
   inputs:
     provider: 'azurerm'
     command: 'apply'
