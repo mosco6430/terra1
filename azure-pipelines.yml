@@ -25,10 +25,10 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
-    backendServiceArm: '$(subscription)'
-    backendAzureRmResourceGroupName: '$(resourceGroup)'
-    backendAzureRmStorageAccountName: '$(storageAccount)'
-    backendAzureRmContainerName: '$(container)'
+    backendServiceArm: 'Azure subscription 1 (f12f6776-9d7e-4370-9a39-deefada50b7c)'
+    backendAzureRmResourceGroupName: 'hr-dev-myrg'
+    backendAzureRmStorageAccountName: 'hrdevmyrgstorage'
+    backendAzureRmContainerName: 'tstate'
     backendAzureRmKey: '$(tfstateFile)'
 
 - task: TerraformTaskV1@0
@@ -38,8 +38,7 @@ steps:
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
     commandOptions: '-out=tfplan'
-    # commandOptions: '-detailed-exitcode -out=tfplan'
-    environmentServiceNameAzureRM: '$(subscription)'
+    environmentServiceNameAzureRM: 'Azure subscription 1 (f12f6776-9d7e-4370-9a39-deefada50b7c)'
 
 - task: PowerShell@2
   displayName: detect any terraform change
@@ -68,4 +67,4 @@ steps:
     command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
     commandOptions: 'tfplan'
-    environmentServiceNameAzureRM: '$(subscription)'
+    environmentServiceNameAzureRM: 'Azure subscription 1 (f12f6776-9d7e-4370-9a39-deefada50b7c)'
