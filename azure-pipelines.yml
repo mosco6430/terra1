@@ -24,7 +24,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/'
     backendServiceArm: 'Azure subscription 1 (f12f6776-9d7e-4370-9a39-deefada50b7c)'
     backendAzureRmResourceGroupName: 'hr-dev-myrg'
     backendAzureRmStorageAccountName: 'hrdevmyrgstorage'
